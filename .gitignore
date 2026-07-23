@@ -1,0 +1,12 @@
+# .gitignore for modernized project
+node_modules/
+modernized-frontend/node_modules/
+modernized-frontend/dist/
+modernized-backend/bin/
+modernized-backend/obj/
+*.user
+*.suo
+*.log
+.vs/
+.env
+.DS_Store

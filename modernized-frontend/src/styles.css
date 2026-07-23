@@ -1,0 +1,59 @@
+/***** WVU Brand variables and styles *****/
+:root{
+  --wvu-gold: #EEAA00;        /* Primary gold (web-optimized) */
+  --wvu-navy: #002855;        /* Primary navy (web-optimized)  */
+  --wvu-accent-1: #9DDAE6;
+  --wvu-accent-2: #0062A3;
+  --wvu-neutral-1: #F7F7F7;
+  --wvu-neutral-2: #BEB7B3;
+  --wvu-dark: #1C2B39;
+  --max-width: 900px;
+}
+
+/* Font stack: WVU uses custom variable fonts (New, Antonia). These are often licensed; if available, self-host or load via Adobe Fonts/Typekit.
+   Fall back to widely available fonts: Helvetica / Arial / system sans-serif for UI, and a serif (Georgia) for headings when Antonia is not available. */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Liberation Sans", sans-serif;
+  background: linear-gradient(180deg, var(--wvu-neutral-1), #ffffff);
+  color: var(--wvu-dark);
+  padding: 28px;
+}
+
+.container { max-width: var(--max-width); margin: 0 auto; background: white; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-radius: 6px }
+
+/* Branded header */
+.brand-header {
+  display:flex; align-items:center; gap:12px; margin-bottom:16px;
+}
+.brand-mark {
+  width:48px; height:48px; border-radius:6px; background: var(--wvu-gold); box-shadow: inset 0 -4px rgba(0,0,0,0.06);
+}
+.brand-title { color: var(--wvu-navy); font-size:1.6rem; margin:0; font-weight:700; /* Ideally use Antonia or New Variable for headlines */
+  font-family: 'Antonia', 'New_Variable', "Helvetica Neue", Helvetica, Arial, serif;
+}
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size:0.95rem }
+thead th { background: var(--wvu-navy); color: white; padding: 12px; text-align:left }
+th, td { padding: 10px; border-bottom: 1px solid #eee }
+tbody tr:nth-child(even) { background: #fafafa }
+td input { width: 100%; padding:6px; border:1px solid var(--wvu-neutral-2); border-radius:4px }
+.material-name { padding:6px 0; font-weight:600; color: var(--wvu-dark); }
+select { width: 100%; padding:6px }
+
+/* Button */
+.button-primary {
+  background: linear-gradient(180deg, var(--wvu-gold), #d89a00);
+  color: var(--wvu-dark);
+  border: none; padding: 10px 14px; border-radius: 6px; font-weight: 700; cursor: pointer;
+}
+.button-primary:hover { filter:brightness(0.97) }
+
+/* Responsive tweaks */
+@media (max-width: 720px){
+  .container { padding:12px }
+  .brand-title { font-size: 1.25rem }
+  table thead { display:none }
+  tbody td { display:block; width:100% }
+  tbody tr { margin-bottom:12px; display:block; border:1px solid #eee; padding:10px; border-radius:6px }
+}
