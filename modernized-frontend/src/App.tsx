@@ -77,7 +77,7 @@ export default function App() {
           <h2 id="main-heading" className="sr-only">Biomass cost calculator</h2>
           <table>
             <thead>
-              <tr><th scope="col">Material</th><th scope="col">Heating Value</th><th scope="col">Cost per Unit ($)</th><th scope="col">Unit</th><th scope="col">$/Million BTU</th></tr>
+              <tr><th scope="col">Material</th><th scope="col">Heating Value (BTU)</th><th scope="col">Cost per Unit ($)</th><th scope="col">Unit</th><th scope="col">$/Million BTU</th></tr>
             </thead>
             <tbody>
               {materials.map((m, i) => (
