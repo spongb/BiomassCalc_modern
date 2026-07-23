@@ -25,64 +25,43 @@ export default function App() {
     })
   }
 
-  // Auto-recalculate when materials change, debounced and cancellable
+  // Auto-recalculate client-side when materials change, debounced
   React.useEffect(() => {
-    const controller = new AbortController()
-    let mounted = true
-    const id = setTimeout(async () => {
+    const id = setTimeout(() => {
       setLoading(true)
       try {
-        const payload = materials.map(m => ({
-          Name: m.name,
-          HeatingValue: Number(m.heatingValue || 0),
-          CostPerUnit: Number(m.costPerUnit || 0),
-          Unit: m.unit
-        }))
-        const resp = await fetch('/api/calculate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        })
-        if (!resp.ok) return
-        const data = await resp.json()
-        if (!mounted) return
         const r: Record<string, number> = {}
-        data.forEach((it: any) => (r[it.name] = it.costPerMillion))
+        materials.forEach(m => {
+          const heating = Number(m.heatingValue || 0)
+          const costPerUnit = Number(m.costPerUnit || 0)
+          const effectiveCost = (m.unit?.toLowerCase() === 'ton') ? (costPerUnit / 2000.0) : costPerUnit
+          const costPerMillion = heating > 0 ? Math.round(effectiveCost * (1_000_000.0 / heating) * 100) / 100 : 0
+          r[m.name] = costPerMillion
+        })
         setResults(r)
       } catch (e) {
-        if ((e as any).name === 'AbortError') {
-          // aborted, ignore
-        } else {
-          console.error('calculate failed', e)
-        }
+        console.error('calc failed', e)
       } finally {
-        if (mounted) setLoading(false)
+        setLoading(false)
       }
-    }, 350) // debounce 350ms
+    }, 250) // shorter debounce for local calc
 
-    return () => { mounted = false; controller.abort(); clearTimeout(id) }
+    return () => clearTimeout(id)
   }, [materials])
 
-  const manualCalculate = async () => {
-    // expose manual trigger if needed
+  const manualCalculate = () => {
+    // run same client-side calculation synchronously
     setLoading(true)
     try {
-      const payload = materials.map(m => ({
-        Name: m.name,
-        HeatingValue: Number(m.heatingValue || 0),
-        CostPerUnit: Number(m.costPerUnit || 0),
-        Unit: m.unit
-      }))
-      const resp = await fetch('/api/calculate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-      })
-      const data = await resp.json()
       const r: Record<string, number> = {}
-      data.forEach((it: any) => (r[it.name] = it.costPerMillion))
+      materials.forEach(m => {
+        const heating = Number(m.heatingValue || 0)
+        const costPerUnit = Number(m.costPerUnit || 0)
+        const effectiveCost = (m.unit?.toLowerCase() === 'ton') ? (costPerUnit / 2000.0) : costPerUnit
+        const costPerMillion = heating > 0 ? Math.round(effectiveCost * (1_000_000.0 / heating) * 100) / 100 : 0
+        r[m.name] = costPerMillion
+      })
       setResults(r)
-    } catch (e) {
-      console.error(e)
     } finally { setLoading(false) }
   }
 
