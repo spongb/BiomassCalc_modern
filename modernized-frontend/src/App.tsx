@@ -66,37 +66,52 @@ export default function App() {
   }
 
   return (
-    <div className="container">
-      <div className="brand-header">
-        <div className="brand-mark" aria-hidden="true"></div>
-        <h1 className="brand-title">WVU BioMassCalc</h1>
+    <>
+      <a href="#main" className="skip-link">Skip to content</a>
+      <div className="container">
+        <div className="brand-header">
+          <div className="brand-mark" aria-hidden="true"></div>
+          <h1 className="brand-title">WVU BioMassCalc</h1>
+        </div>
+        <main id="main" aria-labelledby="main-heading">
+          <h2 id="main-heading" className="sr-only">Biomass cost calculator</h2>
+          <table>
+            <thead>
+              <tr><th scope="col">Material</th><th scope="col">Heating Value</th><th scope="col">Cost per Unit ($)</th><th scope="col">Unit</th><th scope="col">$/Million BTU</th></tr>
+            </thead>
+            <tbody>
+              {materials.map((m, i) => (
+                <tr key={m.name}>
+                  <td><div className="material-name">{m.name}</div></td>
+                  <td>
+                    <label className="sr-only" htmlFor={`heating-${i}`}>Heating value for {m.name}</label>
+                    <input id={`heating-${i}`} type="number" inputMode="numeric" aria-label={`Heating value for ${m.name}`} value={m.heatingValue} onChange={e => update(i, 'heatingValue', e.target.value)} />
+                  </td>
+                  <td>
+                    <label className="sr-only" htmlFor={`cost-${i}`}>Cost per unit for {m.name}</label>
+                    <input id={`cost-${i}`} type="number" step="any" inputMode="decimal" aria-label={`Cost per unit for ${m.name}`} value={m.costPerUnit} onChange={e => update(i, 'costPerUnit', e.target.value)} />
+                  </td>
+                  <td>
+                    <label className="sr-only" htmlFor={`unit-${i}`}>Unit for {m.name}</label>
+                    <select id={`unit-${i}`} aria-label={`Unit for ${m.name}`} value={m.unit} onChange={e => update(i, 'unit', e.target.value)}>
+                      <option value="ton">/Ton</option>
+                      <option value="mcf">/Mcf</option>
+                      <option value="gallon">/Gallon</option>
+                      <option value="kwh">/KWH</option>
+                    </select>
+                  </td>
+                  <td>
+                    <div role="status" aria-live="polite" aria-atomic="true">{results[m.name] ?? '—'}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{marginTop:12}}>
+            <button className="button-primary" onClick={manualCalculate} aria-disabled={loading} aria-live="polite">{loading ? 'Calculating...' : 'Calculate'}</button>
+          </div>
+        </main>
       </div>
-      <table>
-        <thead>
-          <tr><th>Material</th><th>Heating Value</th><th>Cost per Unit ($)</th><th>Unit</th><th>$/Million BTU</th></tr>
-        </thead>
-        <tbody>
-          {materials.map((m, i) => (
-            <tr key={m.name}>
-              <td><div className="material-name">{m.name}</div></td>
-              <td><input type="number" value={m.heatingValue} onChange={e => update(i, 'heatingValue', e.target.value)} /></td>
-                            <td><input type="number" step="any" value={m.costPerUnit} onChange={e => update(i, 'costPerUnit', e.target.value)} /></td>
-              <td>
-                <select value={m.unit} onChange={e => update(i, 'unit', e.target.value)}>
-                  <option value="ton">/Ton</option>
-                  <option value="mcf">/Mcf</option>
-                  <option value="gallon">/Gallon</option>
-                  <option value="kwh">/KWH</option>
-                </select>
-              </td>
-              <td>{results[m.name] ?? '—'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{marginTop:12}}>
-        <button className="button-primary" onClick={manualCalculate}>{loading ? 'Calculating...' : 'Calculate'}</button>
-      </div>
-    </div>
+    </>
   )
 }
